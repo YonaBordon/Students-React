@@ -16,7 +16,7 @@ const EditStudent = () => {
   const [loading, setLoading] = useState(true);
 
   const getInitialValues = async () => {
-    const res = await axios.get(`http://localhost:8000/api/edit-student/${id}`);
+    const res = await axios.get(`http://localhost:8000/api/student/${id}`);
     setStudent(res.data.student);
     setLoading(false);
   };
@@ -29,7 +29,14 @@ const EditStudent = () => {
     initialValues: student,
     onSubmit: (values) => {
       const updateStudents = async () => {
-        console.log(values);
+        try {
+          const res = await axios.put(
+            `http://localhost:8000/api/student/${values.id}`,
+            values,
+          );
+
+          alert(res.data.message);
+        } catch (error) {}
       };
       updateStudents();
       formik.resetForm();

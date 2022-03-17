@@ -16,7 +16,7 @@ const AddStudent = () => {
         console.log(values);
         try {
           const res = await axios.post(
-            'http://localhost:8000/api/add-student',
+            'http://localhost:8000/api/student',
             values,
           );
           alert(res.data.message);
