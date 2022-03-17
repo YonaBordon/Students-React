@@ -1,30 +1,40 @@
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Form, FormikProvider, useFormik } from 'formik';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-const AddStudent = () => {
+const initialValues = {
+  name: '',
+  course: '',
+  email: '',
+  phone: '',
+};
+
+const EditStudent = () => {
+  const { id } = useParams();
+  const [student, setStudent] = useState(initialValues);
+  const [loading, setLoading] = useState(true);
+
+  const getInitialValues = async () => {
+    const res = await axios.get(`http://localhost:8000/api/edit-student/${id}`);
+    setStudent(res.data.student);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getInitialValues();
+  }, []);
+
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      course: '',
-      email: '',
-      phone: '',
-    },
+    initialValues: student,
     onSubmit: (values) => {
-      const submitFunction = async () => {
+      const updateStudents = async () => {
         console.log(values);
-        try {
-          const res = await axios.post(
-            'http://localhost:8000/api/add-student',
-            values,
-          );
-          alert(res.data.message);
-        } catch (error) {}
       };
-      submitFunction();
+      updateStudents();
       formik.resetForm();
     },
+    enableReinitialize: true,
   });
 
   return (
@@ -39,55 +49,59 @@ const AddStudent = () => {
               </Link>
             </div>
             <div className='card-body'>
-              <FormikProvider value={formik}>
-                <Form>
-                  <div className='form-group mb-3'>
-                    <label htmlFor=''>Student Name</label>
-                    <input
-                      type='text'
-                      name='name'
-                      className=' form-control'
-                      onChange={formik.handleChange}
-                      value={formik.values.name}
-                    />
-                  </div>
-                  <div className='form-group mb-3'>
-                    <label htmlFor=''>Student Course</label>
-                    <input
-                      type='text'
-                      name='course'
-                      className=' form-control'
-                      onChange={formik.handleChange}
-                      value={formik.values.course}
-                    />
-                  </div>
-                  <div className='form-group mb-3'>
-                    <label htmlFor=''>Student Email</label>
-                    <input
-                      type='text'
-                      name='email'
-                      className=' form-control'
-                      onChange={formik.handleChange}
-                      value={formik.values.email}
-                    />
-                  </div>
-                  <div className='form-group mb-3'>
-                    <label htmlFor=''>Student Phone</label>
-                    <input
-                      type='text'
-                      name='phone'
-                      className=' form-control'
-                      onChange={formik.handleChange}
-                      value={formik.values.phone}
-                    />
-                  </div>
-                  <div className='form-group mb-3'>
-                    <button type='submit' className='btn btn-primary'>
-                      Save Student
-                    </button>
-                  </div>
-                </Form>
-              </FormikProvider>
+              {loading ? (
+                <h2>Loading...</h2>
+              ) : (
+                <FormikProvider value={formik}>
+                  <Form>
+                    <div className='form-group mb-3'>
+                      <label htmlFor=''>Student Name</label>
+                      <input
+                        type='text'
+                        name='name'
+                        className=' form-control'
+                        onChange={formik.handleChange}
+                        value={formik.values.name}
+                      />
+                    </div>
+                    <div className='form-group mb-3'>
+                      <label htmlFor=''>Student Course</label>
+                      <input
+                        type='text'
+                        name='course'
+                        className=' form-control'
+                        onChange={formik.handleChange}
+                        value={formik.values.course}
+                      />
+                    </div>
+                    <div className='form-group mb-3'>
+                      <label htmlFor=''>Student Email</label>
+                      <input
+                        type='text'
+                        name='email'
+                        className=' form-control'
+                        onChange={formik.handleChange}
+                        value={formik.values.email}
+                      />
+                    </div>
+                    <div className='form-group mb-3'>
+                      <label htmlFor=''>Student Phone</label>
+                      <input
+                        type='text'
+                        name='phone'
+                        className=' form-control'
+                        onChange={formik.handleChange}
+                        value={formik.values.phone}
+                      />
+                    </div>
+                    <div className='form-group mb-3'>
+                      <button type='submit' className='btn btn-primary'>
+                        Save Student
+                      </button>
+                    </div>
+                  </Form>
+                </FormikProvider>
+              )}
             </div>
           </div>
         </div>
@@ -96,4 +110,4 @@ const AddStudent = () => {
   );
 };
 
-export default AddStudent;
+export default EditStudent;
