@@ -18,6 +18,14 @@ const Student = () => {
     getApiStudents();
   }, []);
 
+  const deleteStudent = async (e, id) => {
+    try {
+      const res = await axios.delete(`http://localhost:8000/api/student/${id}`);
+      alert(res.data.message);
+      getApiStudents();
+    } catch (error) {}
+  };
+
   return (
     <div className=' container'>
       <div className=' row'>
@@ -72,6 +80,7 @@ const Student = () => {
                           <button
                             type='button'
                             className=' btn btn-danger btn-sm'
+                            onClick={(e) => deleteStudent(e, item.id)}
                           >
                             Delete
                           </button>

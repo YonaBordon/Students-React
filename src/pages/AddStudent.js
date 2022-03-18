@@ -13,7 +13,6 @@ const AddStudent = () => {
     },
     onSubmit: (values) => {
       const submitFunction = async () => {
-        console.log(values);
         try {
           const res = await axios.post(
             'http://localhost:8000/api/student',
