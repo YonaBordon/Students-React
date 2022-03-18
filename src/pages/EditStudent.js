@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Form, FormikProvider, useFormik } from 'formik';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 const initialValues = {
   name: '',
@@ -14,6 +14,7 @@ const EditStudent = () => {
   const { id } = useParams();
   const [student, setStudent] = useState(initialValues);
   const [loading, setLoading] = useState(true);
+  let history = useHistory();
 
   const getInitialValues = async () => {
     const res = await axios.get(`http://localhost:8000/api/student/${id}`);
@@ -36,10 +37,10 @@ const EditStudent = () => {
           );
 
           alert(res.data.message);
+          history.push('/');
         } catch (error) {}
       };
       updateStudents();
-      formik.resetForm();
     },
     enableReinitialize: true,
   });
