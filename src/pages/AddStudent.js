@@ -2,8 +2,12 @@ import axios from 'axios';
 import { Form, FormikProvider, useFormik } from 'formik';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import swal from 'sweetalert';
 
 const AddStudent = () => {
+  let history = useHistory();
+
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -18,7 +22,14 @@ const AddStudent = () => {
             'http://localhost:8000/api/student',
             values,
           );
-          alert(res.data.message);
+
+          swal({
+            title: 'Success!',
+            text: res.data.message,
+            icon: 'success',
+            button: 'OK!',
+          });
+          history.push('/');
         } catch (error) {}
       };
       submitFunction();

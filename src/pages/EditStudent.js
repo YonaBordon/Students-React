@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { Link, useHistory, useParams } from 'react-router-dom';
+import swal from 'sweetalert';
 
 const initialValues = {
   name: '',
@@ -36,7 +37,12 @@ const EditStudent = () => {
             values,
           );
 
-          alert(res.data.message);
+          swal({
+            title: 'Success!',
+            text: res.data.message,
+            icon: 'success',
+            button: 'OK!',
+          });
           history.push('/');
         } catch (error) {}
       };

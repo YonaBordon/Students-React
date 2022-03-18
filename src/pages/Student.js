@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
 
 const Student = () => {
   const [students, setStudents] = useState([]);
@@ -21,7 +22,12 @@ const Student = () => {
   const deleteStudent = async (e, id) => {
     try {
       const res = await axios.delete(`http://localhost:8000/api/student/${id}`);
-      alert(res.data.message);
+      swal({
+        title: 'Success!',
+        text: res.data.message,
+        icon: 'success',
+        button: 'OK!',
+      });
       getApiStudents();
     } catch (error) {}
   };
