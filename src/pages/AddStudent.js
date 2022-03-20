@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { Form, FormikProvider, useFormik } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import swal from 'sweetalert';
 
 const AddStudent = () => {
   let history = useHistory();
+
+  const [errors, setErrors] = useState({});
 
   const formik = useFormik({
     initialValues: {
@@ -17,12 +19,11 @@ const AddStudent = () => {
     },
     onSubmit: (values) => {
       const submitFunction = async () => {
-        try {
-          const res = await axios.post(
-            'http://localhost:8000/api/student',
-            values,
-          );
-
+        const res = await axios.post(
+          'http://localhost:8000/api/student',
+          values,
+        );
+        if (res.data.status === 200) {
           swal({
             title: 'Success!',
             text: res.data.message,
@@ -30,10 +31,12 @@ const AddStudent = () => {
             button: 'OK!',
           });
           history.push('/');
-        } catch (error) {}
+          formik.resetForm();
+        } else {
+          setErrors(res.data.errors);
+        }
       };
       submitFunction();
-      formik.resetForm();
     },
   });
 
@@ -60,6 +63,7 @@ const AddStudent = () => {
                       onChange={formik.handleChange}
                       value={formik.values.name}
                     />
+                    <span className=' text-danger'>{errors.name}</span>
                   </div>
                   <div className='form-group mb-3'>
                     <label htmlFor=''>Student Course</label>
@@ -70,6 +74,7 @@ const AddStudent = () => {
                       onChange={formik.handleChange}
                       value={formik.values.course}
                     />
+                    <span className=' text-danger'>{errors.course}</span>
                   </div>
                   <div className='form-group mb-3'>
                     <label htmlFor=''>Student Email</label>
@@ -80,6 +85,7 @@ const AddStudent = () => {
                       onChange={formik.handleChange}
                       value={formik.values.email}
                     />
+                    <span className=' text-danger'>{errors.email}</span>
                   </div>
                   <div className='form-group mb-3'>
                     <label htmlFor=''>Student Phone</label>
@@ -90,6 +96,7 @@ const AddStudent = () => {
                       onChange={formik.handleChange}
                       value={formik.values.phone}
                     />
+                    <span className=' text-danger'>{errors.phone}</span>
                   </div>
                   <div className='form-group mb-3'>
                     <button type='submit' className='btn btn-primary'>
